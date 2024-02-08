@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="sm-group-project:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/sm_group_project_jar</output-path>
+    <root id="archive" name="sm-group-project.jar">
+      <element id="module-output" name="sm-group-project" />
+    </root>
+  </artifact>
+</component>
