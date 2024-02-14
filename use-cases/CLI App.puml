@@ -1,0 +1,18 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor User
+
+rectangle "CLI Application" {
+User --> (Select Query Type) : chooses
+User --> (Fill In Parameters) : inputs
+User --> (Write Report to File) : triggers
+User --> (Open Report in Excel) : views
+
+(Select Query Type) .> (Fill In Parameters) : includes
+(Fill In Parameters) -->(Write Report to File) : follows
+(Write Report to File) .> (Open Report in Excel) : extends
+}
+
+@enduml
