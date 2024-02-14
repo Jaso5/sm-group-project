@@ -21,3 +21,13 @@ jobs:
         run: docker run --name semcontainer -d semimage
       - name: view logs
         run: docker logs semcontainer
+      - name: Build Artifacts
+        run: |
+          mkdir staging
+          mvn package
+          cp target/*.jar staging
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Package
+          path: staging
