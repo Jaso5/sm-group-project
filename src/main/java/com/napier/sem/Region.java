@@ -10,4 +10,10 @@ public enum Region {
     REGION,
     COUNTRY,
     DISTRICT,
+
+
+    /**
+     * None field for when region is not applicable
+     */
+    NONE
 }
