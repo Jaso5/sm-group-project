@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * The API handler for our program
+ */
 public class HttpAPI implements HttpHandler {
     @Override
     public void handle(HttpExchange http) throws IOException {
@@ -20,6 +23,13 @@ public class HttpAPI implements HttpHandler {
         }
     }
 
+    /**
+     * Return a response for the request
+     * @param http HTTP request to respond to
+     * @param response HTTP response code
+     * @param content String to send back
+     * @throws IOException In case of failure to send response
+     */
     private void sendResponse(HttpExchange http, int response, String content) throws IOException {
         OutputStream stream = http.getResponseBody();
         http.sendResponseHeaders(response, content.length());
