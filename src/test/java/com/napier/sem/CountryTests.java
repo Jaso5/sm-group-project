@@ -25,15 +25,22 @@ public class CountryTests
     }
 
     @AfterAll
-    static void tearDown() throws SQLException {
-        if (conn != null && !conn.isClosed()) {
+    static void tearDown() throws SQLException
+    {
+        if (conn != null && !conn.isClosed())
+        {
             conn.close();
         }
     }
 
     @Test
-    void testCountryTableExists() throws SQLException {
+    void doesCountryTableExist() throws SQLException
+    {
         assertTrue(countryMethod.doesCountryTableExist());
     }
-
+    @Test
+    void insertDataInCountry() throws SQLException
+    {
+        assertTrue(countryMethod.insertDataInCountry());
+    }
 }

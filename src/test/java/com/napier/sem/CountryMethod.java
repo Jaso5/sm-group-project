@@ -16,4 +16,18 @@ public class CountryMethod
         tables.close();
         return exists;
     }
+    public boolean insertDataInCountry() throws SQLException
+    {
+        String sql = "SELECT COUNT(*) AS rowCount FROM country";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql))
+        {
+            if (rs.next())
+            {
+                return rs.getInt("rowCount") > 0;
+            } else {
+                return false;
+            }
+        }
+    }
 }
