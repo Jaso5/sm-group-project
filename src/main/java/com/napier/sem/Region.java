@@ -10,6 +10,7 @@ public enum Region {
     REGION,
     COUNTRY,
     DISTRICT,
+    CITY,
 
 
     /**

@@ -50,6 +50,11 @@ public class MySQLConnector
         }
     }
 
+    public Connection getCon()
+    {
+        return con;
+    }
+
     /**
      * Disconnect from the MySQL database.
      */
