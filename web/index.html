@@ -4,8 +4,66 @@
     <meta charset="UTF-8">
     <title>SM Group Project</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
 </head>
 <body>
     <h1>Group Project</h1>
+
+    <p>
+        To generate a query, select which type from the dropdown below.
+        <br>
+        The query descriptions contain the substitutes (AS) and (N), the former meaning a region size (Continent, Country etc.)
+    </p>
+
+    <div>
+        <h2>Query</h2>
+
+        <label for="query_name">Query Name</label>
+        <select id="query_name" name="Query Name">
+            <option value="q0">All countries in (AS) by population DESC</option>
+            <option value="q1">Top (N) populated countries in (AS) DESC</option>
+            <option value="q2">All cities in (AS) by population DESC</option>
+            <option value="q3">Top (N) populated cities in (AS) by population DESC</option>
+            <option value="q4">All capital cities in (AS) by population DESC</option>
+            <option value="q5">Top (N) populated capital cities in (AS) by population DESC</option>
+            <option value="q6">Population, city population and rural population in each (AS)</option>
+        </select>
+        <br>
+        <h3>Addition selectors</h3>
+        <label for="query_name">Area Size (AS)</label>
+        <select id="query_area_size" name="Query Area Size">
+            <option value="world">World</option>
+            <option value="continent">Continent</option>
+            <option value="region">Region</option>
+            <option value="country">Country</option>
+            <option value="district">District</option>
+        </select>
+        <br>
+        <label for="query_n">N</label>
+        <input type="number" id="query_n" name="query N" min="1"/>
+        <br><br>
+        <button id="submit_query" name="Submit" onclick="run_query()">Submit</button>
+    </div>
+
+    <div>
+        <h2>Misc</h2>
+            Population of
+            <select id="misc_area_size">
+                <option>continent</option>
+                <option>region</option>
+                <option>country</option>
+                <option>district</option>
+                <option>city</option>
+            </select>
+            with name:
+            <input id="misc_name" type="text" maxlength="32">
+            <br><br>
+            <button id="submit_misc" name="Submit" onclick="run_misc()">Submit</button>
+    </div>
+
+    <div>
+        <h2>World Population</h2>
+        <h3 id="world_pop" onload="world_population()">There are (LOADING) number of people on this planet. What a bunch of losers</h3>
+    </div>
 </body>
 </html>
