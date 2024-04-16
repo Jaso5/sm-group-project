@@ -15,7 +15,7 @@ public class MySQLConnector
         this.pass = pass;
         this.dbName = dbName;
     }
-    public void connect()
+    private void connect()
     {
         try
         {
@@ -52,6 +52,10 @@ public class MySQLConnector
 
     public Connection getCon()
     {
+        if (con == null)
+        {
+            connect();
+        }
         return con;
     }
 
