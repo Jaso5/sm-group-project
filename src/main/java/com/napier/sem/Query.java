@@ -67,15 +67,14 @@ public class Query {
     }
 
     /**
-     * Constructs, sends, and returns query based on information stored in the class.
-     * @param con Connection to database
-     * @return ResultSet from query
+     * Constructs query.
+     * @return Constructed query.
      */
-    public ResultSet execute(Connection con) {
+    public String buildQuery()
+    {
         String query = "SELECT ";
 
-
-        if (reg1 == Region.NONE || lang == Language.NONE)
+        if (reg1 == Region.NONE && lang == Language.NONE)
         {
             System.out.println("Must enter either language or reg1!");
             return null;
@@ -95,49 +94,44 @@ public class Query {
         switch (reg1)
         {
             case WORLD:
-                query += " SUM(population) AS \"world population\" FROM country;";
-                ResultSet rs;
-                try {
-                    rs = con.createStatement().executeQuery(query);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                return rs;
+                query += "SUM(population) AS \"world population\" FROM country;";
+
+                return query;
             case REGION:
             case CONTINENT:
                 query += reg1.name().toLowerCase() + ", SUM(country.population) AS population, " +
-                         "CONCAT(ROUND((PIC.a/SUM(country.population))*100, 2), '%') AS \"%pop in cities\", " +
-                         "CONCAT(100-ROUND((PIC.a/SUM(country.population))*100, 2), '%') AS \"%pop not in cities\" " +
-                         "FROM country " +
-                         "JOIN city ON (country.code=city.countrycode) " +
-                         "JOIN (SELECT SUM(city.population) AS a, " + reg1.name().toLowerCase() + " AS b " +
-                               "FROM city " +
-                               "JOIN country ON (city.countrycode=country.code) " +
-                               "GROUP BY " + reg1.name().toLowerCase() + ") PIC on (PIC.b=" + reg1.name().toLowerCase() +") " +
-                         "GROUP BY " + reg1.name().toLowerCase() + " ";
+                        "CONCAT(ROUND((PIC.a/SUM(country.population))*100, 2), '%') AS \"%pop in cities\", " +
+                        "CONCAT(100-ROUND((PIC.a/SUM(country.population))*100, 2), '%') AS \"%pop not in cities\" " +
+                        "FROM country " +
+                        "JOIN city ON (country.code=city.countrycode) " +
+                        "JOIN (SELECT SUM(city.population) AS a, " + reg1.name().toLowerCase() + " AS b " +
+                        "FROM city " +
+                        "JOIN country ON (city.countrycode=country.code) " +
+                        "GROUP BY " + reg1.name().toLowerCase() + ") PIC on (PIC.b=" + reg1.name().toLowerCase() +") " +
+                        "GROUP BY " + reg1.name().toLowerCase() + " ";
                 break;
             case COUNTRY:
                 query += "country.code, country.name, country.continent, country.region, " +
-                         "country.population, city.name as capital, " +
-                         "CONCAT(ROUND((PIC.a/country.population)*100, 2), '%') AS \"%Pop in Cities\", " +
-                         "CONCAT(100-ROUND((PIC.a/country.population)*100, 2), '%') AS \"%Pop not in Cities\" " +
-                         "FROM country " +
-                         "JOIN city ON (country.capital=city.id) " +
-                         "JOIN (SELECT SUM(city.population) as a, city.countrycode as b FROM city GROUP BY city.countrycode) PIC on (PIC.b=country.code) ";
+                        "country.population, city.name as capital, " +
+                        "CONCAT(ROUND((PIC.a/country.population)*100, 2), '%') AS \"%Pop in Cities\", " +
+                        "CONCAT(100-ROUND((PIC.a/country.population)*100, 2), '%') AS \"%Pop not in Cities\" " +
+                        "FROM country " +
+                        "JOIN city ON (country.capital=city.id) " +
+                        "JOIN (SELECT SUM(city.population) as a, city.countrycode as b FROM city GROUP BY city.countrycode) PIC on (PIC.b=country.code) ";
                 break;
             case DISTRICT:
                 query += "district, SUM(city.population) AS population" +
-                         "FROM country " +
-                         "JOIN city ON (country.code=city.countrycode) ";
+                        "FROM country " +
+                        "JOIN city ON (country.code=city.countrycode) ";
             case CAPITAL:
                 query += "city.name, city.population AS population " +
-                         "FROM country " +
-                         "JOIN city ON (country.capital=city.id) ";
+                        "FROM country " +
+                        "JOIN city ON (country.capital=city.id) ";
                 break;
             case CITY:
                 query += "city.name, city.population AS population " +
-                         "FROM country " +
-                         "JOIN city ON (country.code=city.countrycode) ";
+                        "FROM country " +
+                        "JOIN city ON (country.code=city.countrycode) ";
                 break;
         }
 
@@ -179,7 +173,18 @@ public class Query {
         query += ";";
 
         System.out.println(query);
+        return query;
+    }
 
+    /**
+     * Executes query.
+     * @param con Connection to database
+     * @return ResultSet from query
+     */
+    public ResultSet execute(Connection con) {
+        String query = buildQuery();
+
+        System.out.println("Sending query: " + query);
         ResultSet rs;
         try {
             rs = con.createStatement().executeQuery(query);
