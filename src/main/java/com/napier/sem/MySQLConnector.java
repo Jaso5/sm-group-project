@@ -32,20 +32,21 @@ public class MySQLConnector
         for (int i = 0; i < retries; ++i) {
             System.out.println("Connecting to database...");
             try {
-                // Wait a bit for db to start
-                Thread.sleep(20000);
                 // Connect to database
                 con = DriverManager.getConnection("jdbc:mysql://db:3306/" + dbName + "?allowPublicKeyRetrieval=true&useSSL=false", user, pass);
                 System.out.println("Successfully connected");
-                // Wait a bit
-                Thread.sleep(3000);
                 // Exit for loop
                 break;
             } catch (SQLException sqle) {
                 System.out.println("Failed to connect to database attempt " + i);
                 System.out.println(sqle.getMessage());
-            } catch (InterruptedException ie) {
-                System.out.println("Thread interrupted? Should not happen.");
+                System.out.println("Retrying...");
+                // Wait a bit for db to start
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
