@@ -172,7 +172,6 @@ public class Query {
 
         query += ";";
 
-        System.out.println(query);
         return query;
     }
 
