@@ -1,5 +1,3 @@
-FROM openjdk:latest
-COPY ./target/classes/com /tmp/com
-WORKDIR /tmp
-RUN curl --output world-db.zip https://downloads.mysql.com/docs/world-db.zip
-ENTRYPOINT ["java", "com.napier.sem.Main"]
+FROM openjdk:17-jdk-alpine
+COPY target/sm-group-project-0.1-jar-with-dependencies.jar app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
