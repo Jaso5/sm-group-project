@@ -94,7 +94,7 @@ public class Query {
         switch (reg1)
         {
             case WORLD:
-                query += " SUM(population) AS \"world population\" FROM country;";
+                query += "SUM(population) AS \"world population\" FROM country;";
 
                 return query;
             case REGION:
@@ -171,6 +171,8 @@ public class Query {
         }
 
         query += ";";
+
+        System.out.println(query);
         return query;
     }
 
@@ -182,6 +184,7 @@ public class Query {
     public ResultSet execute(Connection con) {
         String query = buildQuery();
 
+        System.out.println("Sending query: " + query);
         ResultSet rs;
         try {
             rs = con.createStatement().executeQuery(query);
