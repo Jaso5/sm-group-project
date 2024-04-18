@@ -3,14 +3,29 @@ package com.napier.sem;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
+import com.sun.net.httpserver.HttpServer;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
+/**
+ * Program Entrypoint
+ * This runs a HTTP server and registers our handlers
+ */
+
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello and welcome!");
+    public static void main(String[] args) throws IOException {
         MySQLConnector connector = new MySQLConnector("root", "sem", "world");
-        Connection con = connector.getCon();
-        ResultSet rs1 = new Query().addReg1(Region.COUNTRY).execute(con);
-        ResultSet rs2 = new Query().addReg1(Region.REGION).execute(con);
-        ResultSet rs3 = new Query().addReg1(Region.CITY).addReg2(Region.COUNTRY, "Germany").execute(con);
-        System.out.println("Received result table!");
+      
+        HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 80), 0);
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+
+        server.createContext("/api", new HttpAPI());
+        server.createContext("/", new FileServer("web"));
+        server.setExecutor(executor);
+        System.out.println("Starting server!");
+        server.start();
     }
 }
