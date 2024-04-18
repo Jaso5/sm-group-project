@@ -8,6 +8,6 @@ public class QueryTests
     @Test
     void WorldPopulation()
     {
-        //assertEquals(new Query().addReg1(Region.WORLD).buildQuery(), "SELECT SUM(population) AS \"world population\" FROM country;");
+        assertEquals(new Query().addReg1(Region.WORLD).buildQuery(), "SELECT SUM(population) AS \"world population\" FROM country;");
     }
 }
