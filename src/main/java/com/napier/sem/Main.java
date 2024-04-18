@@ -1,5 +1,8 @@
 package com.napier.sem;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -11,8 +14,11 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Program Entrypoint
  * This runs a HTTP server and registers our handlers
  */
+
 public class Main {
     public static void main(String[] args) throws IOException {
+        MySQLConnector connector = new MySQLConnector("root", "sem", "world");
+      
         HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 80), 0);
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
 
