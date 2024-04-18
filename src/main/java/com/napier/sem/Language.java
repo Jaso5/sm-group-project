@@ -9,4 +9,5 @@ public enum Language {
     HINDI,
     SPANISH,
     ARABIC,
+    NONE,
 }

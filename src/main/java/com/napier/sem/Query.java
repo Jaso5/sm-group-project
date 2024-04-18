@@ -8,7 +8,7 @@ import java.sql.SQLException;
  * Query interface for generic query execution in CLI
  */
 public class Query {
-    private Language lang;
+    private Language lang = Language.NONE;
     private Region reg1 = Region.NONE;
     private Region reg2 = Region.NONE;
     private String reg2Name;
@@ -19,18 +19,35 @@ public class Query {
 
     }
 
+    //TODO: Do something about languages.
+    /**
+     * Building function to specify if this is a language query.
+     * @param lang
+     * @return
+     */
     public Query addLanguage(Language lang)
     {
         this.lang = lang;
         return this;
     }
 
+    /**
+     * Building function to specify type of region to list.
+     * @param reg1 Type of region.
+     * @return Self reference to continue calling other building functions.
+     */
     public Query addReg1(Region reg1)
     {
         this.reg1 = reg1;
         return this;
     }
 
+    /**
+     * Building function to specify what specific region to look for.
+     * @param reg2 Type of region for WHERE clause.
+     * @param reg2Name Name of region for WHERE clause.
+     * @return Self reference to continue calling other building functions.
+     */
     public Query addReg2(Region reg2, String reg2Name)
     {
         this.reg2 = reg2;
@@ -38,20 +55,54 @@ public class Query {
         return this;
     }
 
+    /**
+     * Building function to specify the number of rows in the results table.
+     * @param nRows The maximum number of rows the results table can have.
+     * @return Self reference to continue calling other building functions.
+     */
     public Query addNRows(int nRows)
     {
         this.nRows = nRows;
         return this;
     }
 
+    /**
+     * Constructs, sends, and returns query based on information stored in the class.
+     * @param con Connection to database
+     * @return ResultSet from query
+     */
     public ResultSet execute(Connection con) {
         String query = "SELECT ";
+
+
+        if (reg1 == Region.NONE || lang == Language.NONE)
+        {
+            System.out.println("Must enter either language or reg1!");
+            return null;
+        }
+        if (lang != Language.NONE)
+        {
+//            query += "language,  FROM countrylanguage";
+//            ResultSet rs;
+//            try {
+//                rs = con.createStatement().executeQuery(query);
+//            } catch (SQLException e) {
+//                throw new RuntimeException(e);
+//            }
+//            return rs;
+        }
 
         switch (reg1)
         {
             case WORLD:
-                query += " ";
-                break;
+                query += " SUM(population) AS \"world population\" FROM country;";
+                ResultSet rs;
+                try {
+                    rs = con.createStatement().executeQuery(query);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                return rs;
             case REGION:
             case CONTINENT:
                 query += reg1.name().toLowerCase() + ", SUM(country.population) AS population, " +
