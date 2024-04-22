@@ -1,8 +1,13 @@
 package com.napier.sem;
 
+import com.opencsv.CSVWriter;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Query interface for generic query execution in CLI
@@ -179,11 +184,10 @@ public class Query {
     }
 
     /**
-     * Executes query.
+     * Executes query and outputs as csv.
      * @param con Connection to database
-     * @return ResultSet from query
      */
-    public ResultSet execute(Connection con) {
+    public void execute(Connection con) {
         String query = buildQuery();
 
         System.out.println("Sending query: " + query);
@@ -193,7 +197,21 @@ public class Query {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return rs;
+        CSVWriter csvWriter = null;
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        try {
+            csvWriter = new CSVWriter(new FileWriter("web/" + timestamp.toString() + ".csv"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            csvWriter.writeAll(rs, true);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
