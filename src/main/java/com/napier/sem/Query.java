@@ -1,14 +1,19 @@
 package com.napier.sem;
 
+import com.opencsv.CSVWriter;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Query interface for generic query execution in CLI
  */
 public class Query {
-    private Language lang = Language.NONE;
+    private boolean lang = false;
     private Region reg1 = Region.NONE;
     private Region reg2 = Region.NONE;
     private String reg2Name;
@@ -19,13 +24,12 @@ public class Query {
 
     }
 
-    //TODO: Do something about languages.
     /**
      * Building function to specify if this is a language query.
-     * @param lang
-     * @return
+     * @param lang If it is a language query or not.
+     * @return Self reference to continue calling other building functions.
      */
-    public Query addLanguage(Language lang)
+    public Query addLanguage(boolean lang)
     {
         this.lang = lang;
         return this;
@@ -74,21 +78,25 @@ public class Query {
     {
         String query = "SELECT ";
 
-        if (reg1 == Region.NONE && lang == Language.NONE)
+        if (reg1 == Region.NONE && !lang)
         {
             System.out.println("Must enter either language or reg1!");
             return null;
         }
-        if (lang != Language.NONE)
+        if (lang)
         {
-//            query += "language,  FROM countrylanguage";
-//            ResultSet rs;
-//            try {
-//                rs = con.createStatement().executeQuery(query);
-//            } catch (SQLException e) {
-//                throw new RuntimeException(e);
-//            }
-//            return rs;
+            query += "language, SUM((percentage*population)/100) AS languagepop, " +
+                     "CONCAT(ROUND((SUM(percentage*population)/(SELECT SUM(population) FROM country)), 2), '%') AS \"%speakers in world\" " +
+                     "FROM countrylanguage " +
+                     "JOIN country ON (country.code=countrylanguage.countrycode) " +
+                     "WHERE language = 'English' " +
+                        "OR language = 'Chinese' " +
+                        "OR language = 'Hindi' " +
+                        "OR language = 'Spanish' " +
+                        "OR language = 'Arabic' " +
+                     "GROUP BY language " +
+                     "ORDER BY SUM(population) DESC;";
+            return query;
         }
 
         switch (reg1)
@@ -172,16 +180,15 @@ public class Query {
 
         query += ";";
 
-        System.out.println(query);
         return query;
     }
 
     /**
-     * Executes query.
+
+     * Executes query and outputs as csv.
      * @param con Connection to database
-     * @return ResultSet from query
      */
-    public ResultSet execute(Connection con) {
+    public void execute(Connection con) {
         String query = buildQuery();
 
         System.out.println("Sending query: " + query);
@@ -191,7 +198,21 @@ public class Query {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return rs;
+        CSVWriter csvWriter = null;
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        try {
+            csvWriter = new CSVWriter(new FileWriter("web/" + timestamp.toString() + ".csv"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            csvWriter.writeAll(rs, true);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
