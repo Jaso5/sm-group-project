@@ -10,12 +10,39 @@ const world_pop = document.getElementById("world_pop")
 
 console.log("Script loaded!");
 
+function send_query(q, as, e) {
+    fetch("http://localhost/api", {
+        q: q,
+        as: as,
+        e: e,
+    }).then((response) => {
+        let json = JSON.parse(response.body.toString());
+
+        if (q == "m0") { // Misc query
+
+        } else if (q == "p0") { //
+
+        } else {
+
+        }
+
+    })
+}
+
 function run_query() {
-    console.log("Run query")
+    send_query(
+        query_name.value,
+        query_n.value,
+        query_area_size.value,
+    )
 }
 
 function run_misc() {
-    console.log("Run misc")
+    send_query(
+        "m0",
+        misc_area_size.value,
+        misc_name.value
+    )
 }
 
 function world_population() {
