@@ -184,6 +184,7 @@ public class Query {
     }
 
     /**
+
      * Executes query and outputs as csv.
      * @param con Connection to database
      */
