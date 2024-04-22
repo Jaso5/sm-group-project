@@ -9,6 +9,11 @@ public class MySQLConnector
     private final String dbName;
     private Connection con = null;
 
+    public String generateConnectionUrl()
+    {
+        return "jdbc:mysql://db:3306/" + dbName + "?allowPublicKeyRetrieval=true&useSSL=false";
+    }
+
     public MySQLConnector(String user, String pass, String dbName)
     {
         this.user = user;
