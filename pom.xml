@@ -36,6 +36,11 @@
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.12</version>
         </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>OpenCSV</artifactId>
+            <version>5.9</version>
+        </dependency>
     </dependencies>
 
 
